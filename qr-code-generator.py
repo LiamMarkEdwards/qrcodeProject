@@ -1,30 +1,51 @@
-# perfect applicationn to print QR codes for mass scans like onto cars or billboards or banners. and this method is totally free
-
 import qrcode
 from qrcode.exceptions import DataOverflowError
 from PIL import Image
-from datetime import datetime
+import os
 
+# List of URLs to cycle through
+websites = {
+    "aluma": "https://aluma.co.za/",
+    "fintegrate": "https://fintegratetech.co.za/",
+    "lndr": "https://onboarding.lndr.credit/broker/auth/login",
+    "uatPortal": "https://uatportal.aluma.co.za/advisor/auth/login"
+}
 
-def generate_qr_code(url, version=1, error_correction=qrcode.constants.ERROR_CORRECT_L, box_size=15, border=4,
-                     fill_color="white", back_color="black", output_file="login_page_qr.png"):
+def generate_qr_code(url, logo_path, output_file):
     try:
-        # init qrcode as an object
+        # init the QR code project
         qr = qrcode.QRCode(
-            version=version,
-            error_correction=error_correction,
-            box_size=box_size,
-            border=border,
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=15,
+            border=4,
         )
 
-        # add data to qr code
+        # add data to QR code
         qr.add_data(url)
 
-        # generate tge qr code image
+        # generate QR code image
         qr.make(fit=True)
 
-        # create image from qr code
-        qr_image = qr.make_image(fill_color=fill_color, back_color=back_color)
+        # create image from QRCode
+        qr_image = qr.make_image(fill_color="darkblue", back_color="white")
+
+        # open logo image
+        #logo = Image.open(logo_path)
+
+        # calculate logo size to fit into the QR code
+        #qr_width, qr_height = qr_image.size
+        #logo_width, logo_height = logo.size
+        #logo_size = min(qr_width, qr_height) // 4
+
+        # resize the logo
+        #logo = logo.resize((logo_size, logo_size))
+
+        # calculate the position to paste the loogo in the center of the QR code
+       # position = ((qr_width - logo.width) // 2, (qr_height - logo.height) // 2)
+
+        # paste the logo yo the QR code
+       # qr_image.paste(logo, position)
 
         # save the image
         qr_image.save(output_file)
@@ -35,13 +56,12 @@ def generate_qr_code(url, version=1, error_correction=qrcode.constants.ERROR_COR
     except Exception as e:
         print(f"An error occurred: {e}")
 
-
 def track_qr_scans(file_path):
     try:
         with open(file_path, "r") as file:
             scan_count = int(file.read())
     except FileNotFoundError:
-        # if the file doesnt exist, set count to 0
+        # if the file doesnt exist set count to 0
         scan_count = 0
 
     scan_count += 1
@@ -52,14 +72,18 @@ def track_qr_scans(file_path):
 
     print(f"QR code scanned! Total scans: {scan_count}")
 
+# create directory if it doesnt exist
+output_directory = "qr_code"
+if not os.path.exists(output_directory):
+    os.makedirs(output_directory)
 
-# test usage
-login_page_url = "https://www.sunatasigns.co.za/" # any valid URL can be passed here.
-generate_qr_code(login_page_url,
-                 version=2,
-                 box_size=10,
-                 border=2,
-                 fill_color="red",
-                 back_color="black",
-                 output_file="tester_qr_code.png")
+# get logo path
+logo_path = "google-g-icon.png"
+
+# generate QR codes with logo
+for label, url in websites.items():
+    output_file = os.path.join(output_directory, f"{label}_qr_code.png")
+    generate_qr_code(url, logo_path, output_file)
+
+# track QR code scans
 track_qr_scans("qr_code_scans.txt")
