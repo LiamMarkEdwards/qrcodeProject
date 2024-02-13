@@ -31,21 +31,21 @@ def generate_qr_code(url, logo_path, output_file):
         qr_image = qr.make_image(fill_color="darkblue", back_color="white")
 
         # open logo image
-        #logo = Image.open(logo_path)
+       # logo = Image.open(logo_path)
 
         # calculate logo size to fit into the QR code
-        #qr_width, qr_height = qr_image.size
+       # qr_width, qr_height = qr_image.size
         #logo_width, logo_height = logo.size
-        #logo_size = min(qr_width, qr_height) // 4
+       # logo_size = min(qr_width, qr_height) // 4
 
         # resize the logo
-        #logo = logo.resize((logo_size, logo_size))
+       # logo = logo.resize((logo_size, logo_size))
 
         # calculate the position to paste the loogo in the center of the QR code
-       # position = ((qr_width - logo.width) // 2, (qr_height - logo.height) // 2)
+        #position = ((qr_width - logo.width) // 2, (qr_height - logo.height) // 2)
 
         # paste the logo yo the QR code
-       # qr_image.paste(logo, position)
+        #qr_image.paste(logo, position)
 
         # save the image
         qr_image.save(output_file)
@@ -78,7 +78,7 @@ if not os.path.exists(output_directory):
     os.makedirs(output_directory)
 
 # get logo path
-logo_path = "google-g-icon.png"
+logo_path = "logo.png"
 
 # generate QR codes with logo
 for label, url in websites.items():
